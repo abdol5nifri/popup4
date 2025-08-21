@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>موقعي العصري</title>
+<style>
+  body { 
+    font-family: Arial, sans-serif; 
+    margin: 0; 
+    padding: 0; 
+    line-height: 1.6; 
+  }
+  /* كلاس لتعطيل التمرير على الصفحة الرئيسية */
+  body.no-scroll {
+    overflow: hidden;
+  }
+  /* Header styles */
+  header {
+    background: #ffffff;
+    height: 100px;
+    padding: 0 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 0px 0px rgba(0,0,0,0.0);
+    /*position: sticky;*/
+    top: 0;
+    z-index: 100;
+  }
+  .logo img {
+    height: 250px;
+    width: auto;
+    transition: transform 0.2s ease;
+    box-shadow: 0 0px 0px rgba(0,0,0,0.0);
+    margin: 0px;
+  }
+  .logo img:hover {
+    transform: scale(1.05);
+  }
+  .social-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 20px;
+  }
+  .social-links li a {
+    color: #ff4081;
+    font-size: 50px;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  .social-links li a:hover {
+    color: #e91e63;
+  }
+  /* أنماط زر الطباعة */
+  .social-links li a#printBtn {
+    color: #ff4081;
+    font-size: 50px; /* نفس حجم الأيقونات */
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  .social-links li a#printBtn:hover {
+    color: #e91e63;
+  }
+  
+  /* Sidebar styles */
+  .sidebar {
+    position: fixed; /* لاصق بحال البوب اب */
+    top: 50%; /* من أعلى الصفحة */
+    right: 10px; /* على اليمين */
+    width: 80px; /* عرض الشريط الجانبي */
+    background: #f0f0f0;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    z-index: 101; /* فوق الهيدر، تحت البوب اب */
+  }
+  .sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .sidebar ul li a {
+    color: #ff4081;
+    font-size: 24px;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  .sidebar ul li a:hover {
+    color: #e91e63;
+  }
+  
+  
+  .container { 
+    max-width: 800px; 
+    margin: auto; 
+    padding: 20px; 
+    text-align: center;
+  }
+  h1 { 
+    text-align: center; 
+    margin-bottom: 20px; 
+  }
+  img { 
+    max-width: 100%; 
+    height: auto; 
+    display: block; 
+    margin: auto;
+  }
+  p { 
+    margin-bottom: 20px; 
+    text-align: center;
+    font-size: 24px;
+  }
+  .btn { 
+    display: inline-block; 
+    padding: 10px 20px; 
+    background: #ff4081; 
+    color: #fff; 
+    text-decoration: none; 
+    border-radius: 5px; 
+  }
+  .ad { 
+    background: #f0f0f0; 
+    padding: 10px; 
+    margin: 20px 0; 
+    text-align: center; 
+  }
+  /* Footer styles */
+  footer {
+    background: #f8f8f8;
+    text-align: center;
+    padding: 10px 0;
+    margin-top: 0px;
+    border-top: 1px solid #ddd;
+  }
+  footer p {
+    margin: 0;
+    color: #666;
+    font-size: 14px;
+  }
+  /* Popup styles */
+  .popup-overlay {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease;
+    z-index: 999;
+  }
+  .popup-overlay.show { 
+    opacity: 1; 
+    visibility: visible; 
+  }
+  .popup {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 800px;
+    max-height: 80vh;
+    margin-top: 10vh;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    box-sizing: border-box;
+    padding-top: 50px;
+  }
+  .popup-content {
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: calc(80vh - 70px);
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .popup-content::-webkit-scrollbar {
+    display: none;
+  }
+  .popup img { 
+    margin-bottom: 10px; 
+    max-width: 100%; 
+    height: auto; 
+  }
+  .close-popup {
+    position: absolute;
+    top: -50px;
+    right: -2px;
+    background: #ff4081;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    z-index: 10;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .close-popup:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+  }
+  iframe {
+    width: 100% !important;
+    aspect-ratio: 16 / 9;
+    margin-top: 0px;
+    border: none;
+    border-radius: 5px;
+  }
+  .popup .btn { 
+    margin-top: 10px; 
+  }
+  /* أنماط العنوان في الـ PDF */
+  .print-title {
+    display: none; /* إخفاء العنوان في عرض الويب */
+  }
+  /* ميديا كويري لتحسين العرض على الهواتف */
+  @media screen and (max-width: 600px) {
+    header {
+      height: 35px;
+      margin: 0px;
+      gap: 0px;
+      padding: 10px 10px;
+    }
+    .logo img {
+      height: 150px;
+      margin: 0px;
+      padding: 0px;
+    }
+    .social-links {
+      gap: 5px;
+    }
+    .social-links li a {
+      font-size: 24px;
+    }
+    .social-links li a#printBtn {
+      font-size: 24px; /* نفس حجم الأيقونات على الهواتف */
+    }
+    
+    
+    .sidebar {
+      width: 60px; /* تصغير عرض الشريط الجانبي */
+      top: 50%; /* لاصق من أعلى الصفحة */
+      right: 0px; /* على اليمين */
+    }
+    .sidebar ul li a {
+      font-size: 18px; /* تصغير الأيقونات فالشريط */
+    }
+    
+    
+    .popup {
+      max-height: 70vh;
+      margin-top: 15vh;
+      padding: 15px;
+    }
+    .popup-content {
+      max-height: calc(70vh - 60px);
+    }
+    .close-popup {
+      top: -40px;
+      right: -2px;
+      padding: 6px 10px;
+      font-size: 16px;
+    }
+    iframe {
+      width: fit-content;    
+    }
+    .popup p {
+      font-size: 24px;
+      word-wrap: break-word;
+      line-height: 1.4;
+    }
+  }
+  /* إعدادات الطباعة */
+  @media print {
+    header {
+      display: none;
+    }
+    footer {
+      display: none;
+    }
+    .popup-overlay {
+      display: none;
+    }
+    .ad {
+      display: none;
+    }
+    body {
+      margin: 0;
+      font-size: 12pt; /* حجم خط مناسب للطباعة */
+      line-height: 1.5;
+    }
+    .container {
+      padding: 10mm; /* هوامش مناسبة للطباعة */
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+    h1 {
+      font-size: 16pt; /* حجم العنوان أكبر قليلاً */
+    }
+    p {
+      font-size: 24pt; /* حجم النص مناسب */
+      margin: 10px 0;
+      word-wrap:break-word;
+      line-height:2.5;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+    .btn {
+      display: none; /* إخفاء أزرار التحميل أو التسوق */
+    }
+    .print-title {
+      display: block;
+      text-align: center;
+      margin-top: 20mm; /* مسافة من المقالة */
+      font-size: 14pt; /* حجم خط أكبر للعنوان في الـ PDF */
+      font-weight: bold;
+      page-break-before: avoid; /* تجنب قطع الصفحة قبل العنوان */
+    }
+    .print-title a {
+      color: #ff4081;
+      text-decoration: none;
+    }
+    .print-title a:hover {
+      text-decoration: underline;
+    }
+    @page {
+      size: A4;
+      margin: 10mm; /* هوامش الصفحة */
+    }
+    
+    
+    .article-printer-btn{
+        
+        display: none;
+    }
+     .sidebar{
+      display: none; /* إخفاء أزرار التحميل أو التسوق */
+  }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header>
+  <div class="logo">
+    <img src="https://i.postimg.cc/zvBtXmnG/Black-and-Green-Simple-Online-Shop-Website-Logo-20250820-012006-0000.png" alt="شعار الموقع">
+  </div>
+  <ul class="social-links">
+    <li><a href="https://facebook.com" target="_blank" title="فيسبوك">&#x1F4F1;</a></li>
+    <li><a href="https://twitter.com" target="_blank" title="تويتر">&#x1F426;</a></li>
+    <li><a href="https://instagram.com" target="_blank" title="إنستغرام">&#x1F4F7;</a></li>
+    <li><a href="#" id="printBtn" title="طباعة">&#x1F5A8;</a></li> <!-- زر الطباعة -->
+  </ul>
+</header>
+
+<!-- Sidebar -->
+<div class="sidebar">
+  <ul>
+    <!-- <li><a href="https://facebook.com" target="_blank" title="فيسبوك">&#x1F4F1;</a></li>
+    <li><a href="https://twitter.com" target="_blank" title="تويتر">&#x1F426;</a></li>
+    <li><a href="https://instagram.com" target="_blank" title="إنستغرام">&#x1F4F7;</a></li> -->
+    
+     <!-- <li><a href="#" title="إعلان">📢</a></li> -->
+     <li><a href="#"id="printBtnb" title="طباعة">&#x1F5A8;</a></li>
+     
+   
+  </ul>
+</div>
+
+<div class="container">
+  <h1>عنوان المقال</h1>
+  <img src="https://i.postimg.cc/7hmmBvsy/4873159.jpg" alt="صورة المقال">
+  <p>هذا هو نص المقال التجريبي الذي يحتوي على حوالي 100 كلمة. يمكن استبدال هذا النص بالمحتوى الحقيقي للمقال. الهدف هنا هو توفير تصميم عصري ومتجاوب مع مكان للإعلانات وسط المقالة.</p>
+  
+   <!-- زر الطابعة الجديد تحت الفقرة الأولى -->
+  <!-- زر الطابعة الجديد مع النص تحت الفقرة الأولى -->
+  <span class="article-printer-btn" id="articlePrinterBtn" title="طباعة">🖨️ <span>اطبع المقالة</span></span>
+  
+  <p>هذا هو نص المقال التجريبي الذي يحتوي على حوالي 100 كلمة. يمكن استبدال هذا النص بالمحتوى الحقيقي للمقال. الهدف هنا هو توفير تصميم عصري ومتجاوب مع مكان للإعلانات وسط المقالة.</p>
+  <p>هذا هو نص المقال التجريبي الذي يحتوي على حوالي 100 كلمة. يمكن استبدال هذا النص بالمحتوى الحقيقي للمقال. الهدف هنا هو توفير تصميم عصري ومتجاوب مع مكان للإعلانات وسط المقالة.</p>
+  
+  <div class="ad">
+    <img src="https://i.postimg.cc/VsWYyCRN/accurate-marketing-strategy-content-creation-distribution-target-audience-identification-brand-promo.jpg" alt="صورة إعلان تجريبي">
+    <h3>عرض خاص!</h3>
+    <p>استفد من خصم 50% على جميع المنتجات لفترة محدودة! لا تفوت الفرصة.</p>
+    <a href="#" class="btn">تسوق الآن</a>
+  </div>
+  
+  <p>نص إضافي لإكمال طول المقال ولتوضيح توزيع المحتوى على الصفحة بشكل متناسق، بحيث يظهر المحتوى بشكل جيد على جميع الأجهزة.</p>
+  <p>نص إضافي لإكمال طول المقال ولتوضيح توزيع المحتوى على الصفحة بشكل متناسق، بحيث يظهر المحتوى بشكل جيد على جميع الأجهزة.</p>
+  <p>نص إضافي لإكمال طول المقال ولتوضيح توزيع المحتوى على الصفحة بشكل متناسق، بحيث يظهر المحتوى بشكل جيد على جميع الأجهزة.</p>
+  <p>نص إضافي لإكمال طول المقال ولتوضيح توزيع المحتوى على الصفحة بشكل متناسق، بحيث يظهر المحتوى بشكل جيد على جميع الأجهزة.</p>
+  <p>نص إضافي لإكمال طول المقال ولتوضيح توزيع المحتوى على الصفحة بشكل متناسق، بحيث يظهر المحتوى بشكل جيد على جميع الأجهزة.</p>
+ 
+  <p>نص إضافي لإكمال طول المقال ولتوضيح توزيع المحتوى على الصفحة بشكل متناسق، بحيث يظهر المحتوى بشكل جيد على جميع الأجهزة.</p>
+  <div class="ad">
+    <img src="https://i.postimg.cc/VsWYyCRN/accurate-marketing-strategy-content-creation-distribution-target-audience-identification-brand-promo.jpg" alt="صورة إعلان تجريبي">
+    <h3>عرض خاص!</h3>
+    <p>استفد من خصم 50% على جميع المنتجات لفترة محدودة! لا تفوت الفرصة.</p>
+    <a href="#" class="btn">تسوق الآن</a>
+  </div>
+  <p>نص إضافي لإكمال طول المقال ولتوضيح توزيع المحتوى على الصفحة بشكل متناسق، بحيث يظهر المحتوى بشكل جيد على جميع الأجهزة.</p>
+  <p>نص إضافي لإكمال طول المقال ولتوضيح توزيع المحتوى على الصفحة بشكل متناسق، بحيث يظهر المحتوى بشكل جيد على جميع الأجهزة.</p>
+  <p>نص إضافي لإكمال طول المقال ولتوضيح توزيع المحتوى على الصفحة بشكل متناسق، بحيث يظهر المحتوى بشكل جيد على جميع الأجهزة.</p>
+  <p>نص إضافي لإكمال طول المقال ولتوضيح توزيع المحتوى على الصفحة بشكل متناسق، بحيث يظهر المحتوى بشكل جيد على جميع الأجهزة.</p>
+  <a href="#" class="btn">تحميل</a>
+  <!-- عنوان الـ PDF -->
+  <div class="print-title">
+    <a href="https://www.example.com" target="_blank">زوروا موقعنا: www.example.com</a>
+  </div>
+</div>
+
+<!-- Popup -->
+<div class="popup-overlay" id="popupOverlay">
+  <div class="popup">
+    <button class="close-popup" id="closePopup">&times;</button>
+    <div class="popup-content">
+      <img src="https://i.postimg.cc/7hmmBvsy/4873159.jpg" alt="صورة البوب اب">
+      <p>11111111111111111111111111111111</p>
+      <iframe width="560" height="100%" src="https://www.youtube.com/embed/2unqDfO7R7c?si=qXsR_moHwSNLoeXe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      <p>22222222222222222222222222222</p>
+      <p>هذه فقرة داخل البوب اب، يمكن وضع أي محتوى هنا.</p>
+      <p>هذه فقرة داخل البوب اب، يمكن وضع أي محتوى هنا.</p>
+      <p>هذه فقرة داخل البوب اب، يمكن وضع أي محتوى هنا.</p>
+      <div class="ad">
+        <img src="https://i.postimg.cc/VsWYyCRN/accurate-marketing-strategy-content-creation-distribution-target-audience-identification-brand-promo.jpg" alt="صورة إعلان تجريبي">
+        <h3>عرض خاص!</h3>
+        <p>استفد من خصم 50% على جميع المنتجات لفترة محدودة! لا تفوت الفرصة.</p>
+        <a href="#" class="btn">تسوق الآن</a>
+      </div>
+      <p>هذه فقرة داخل البوب اب، يمكن وضع أي محتوى هنا.</p>
+      <p>هذه فقرة داخل البوب اب، يمكن وضع أي محتوى هنا.</p>
+      <p>هذه فقرة داخل البوب اب، يمكن وضع أي محتوى هنا.</p>
+      <p>هذه فقرة داخل البوب اب، يمكن وضع أي محتوى هنا.</p>
+      <p>هذه فقرة داخل البوب اب، يمكن وضع أي محتوى هنا.</p>
+      <p>هذه فقرة داخل البوب اب، يمكن وضع أي محتوى هنا.</p>
+      <p>هذه فقرة داخل البوب اب، يمكن وضع أي محتوى هنا.</p>
+      <p>هذه فقرة داخل البوب اب، يمكن وضع أي محتوى هنا.</p>
+      <p>هذه فقرة داخل البوب اب، يمكن وضع أي محتوى هنا.</p>
+      <p>هذه فقرة داخل البوب اب، يمكن وضع أي محتوى هنا.</p>
+      <p>هذه فقرة داخل البوب اب، يمكن وضع أي محتوى هنا.</p>
+      <p>هذه فقرة داخل البوب اب، يمكن وضع أي محتوى هنا.</p>
+      <p>هذه فقرة داخل البوب اب، يمكن وضع أي محتوى هنا.</p>
+      <p>هذه فقرة داخل البوب اب، يمكن وضع أي محتوى هنا.</p>
+      <p>هذه فقرة داخل البوب اب، يمكن وضع أي محتوى هنا.</p>
+      <p>هذه فقرة داخل البوب اب، يمكن وضع أي محتوى هنا.</p>
+      <p>هذه فقرة داخل البوب اب، يمكن وضع أي محتوى هنا.</p>
+      <p>هذه فقرة داخل البوب اب، يمكن وضع أي محتوى هنا.</p>
+      <script type="text/javascript">
+        atOptions = {
+          'key' : 'f9c61c7096c66462363ab85518fd14f2',
+          'format' : 'iframe',
+          'height' : 90,
+          'width' : 728,
+          'params' : {}
+        };
+      </script>
+      <script type="text/javascript" src="//www.highperformanceformat.com/f9c61c7096c66462363ab85518fd14f2/invoke.js"></script>
+      <script async="async" data-cfasync="false" src="//pl24617574.profitableratecpm.com/04d204e8bcb443afba2286a2fc8cc3d1/invoke.js"></script>
+      <div id="container-04d204e8bcb443afba2286a2fc8cc3d1"></div>
+      <a href="#" class="btn">زر البوب اب</a>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer>
+  <p>جميع الحقوق محفوظة © 2025</p>
+</footer>
+
+<script>
+  const popupOverlay = document.getElementById('popupOverlay');
+  const closePopup = document.getElementById('closePopup');
+  const sidebarPrinterBtn = document.getElementById('printBtnb');
+  const articlePrinterBtn = document.getElementById('articlePrinterBtn');
+  
+
+  let popupShown = false;
+
+  function showPopup() {
+    if (!popupShown) {
+      popupOverlay.classList.add('show');
+      document.body.classList.add('no-scroll');
+      popupShown = true;
+    }
+  }
+
+  function hidePopup() {
+    popupOverlay.classList.remove('show');
+    document.body.classList.remove('no-scroll');
+  }
+
+  window.addEventListener('scroll', () => {
+    const scrollPos = window.scrollY + window.innerHeight;
+    const halfPage = document.body.scrollHeight / 2;
+    if (scrollPos >= halfPage) showPopup();
+  });
+
+  closePopup.addEventListener('click', hidePopup);
+  popupOverlay.addEventListener('click', (e) => {
+    if (e.target === popupOverlay) hidePopup();
+  });
+
+  // دالة الطباعة
+  document.getElementById('printBtn').addEventListener('click', () => {
+    window.print();
+  });
+  
+   // ربط زر الطابعة فالشريط الجانبي مع نافذة الطباعة
+  printBtnb.addEventListener('click', () => {
+    console.log('Sidebar printer button clicked'); // اختبار
+    window.print();
+  });
+  
+  
+  // ربط زر الطابعة فالمقالة مع نافذة الطباعة
+  articlePrinterBtn.addEventListener('click', () => {
+    console.log('Article printer button clicked'); // اختبار
+    window.print();
+  });
+  
+  
+</script>
+
+</body>
+</html>
